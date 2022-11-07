@@ -9,7 +9,7 @@ Section 28 (Optional - React Hooks Introduction & Summary) covered:
 - [x] More on useState() & State Updating
 - [x] Array Destructuring
 - [x] Multiple States
-- [ ] Rules of Hooks
+- [x] Rules of Hooks
 - [ ] Passing State Data Across Components
 - [ ] Sending Http Requests
 - [ ] useEffect() & Loading Data
