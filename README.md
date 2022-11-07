@@ -4,8 +4,8 @@ Examples from the **"Section 28 (Optional - React Hooks Introduction & Summary)"
 
 Section 28 (Optional - React Hooks Introduction & Summary) covered:
 
-- [ ] What Are React Hooks?
-- [ ] Getting Started with useState()
+- [x] What Are React Hooks?
+- [x] Getting Started with useState()
 - [ ] More on useState() & State Updating
 - [ ] Array Destructuring
 - [ ] Multiple States
