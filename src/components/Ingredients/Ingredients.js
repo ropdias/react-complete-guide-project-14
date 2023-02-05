@@ -7,12 +7,18 @@ import Search from "./Search";
 const Ingredients = () => {
   const [userIngredients, setUserIngredients] = useState([]);
 
-  const addIngredientHandler = (ingredient) => {
+  const addIngredientHandler = async (ingredient) => {
+    const response = await fetch(
+      "https://react-http-ef0dc-default-rtdb.firebaseio.com/ingredients.json",
+      {
+        method: "POST",
+        body: JSON.stringify(ingredient),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    const responseData = await response.json();
     setUserIngredients((prevIngredients) => {
-      return [
-        ...prevIngredients,
-        { id: Math.random().toString(), ...ingredient },
-      ];
+      return [...prevIngredients, { id: responseData.name, ...ingredient }];
     });
   };
 
