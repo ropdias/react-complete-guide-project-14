@@ -33,7 +33,13 @@ const Ingredients = () => {
     });
   };
 
-  const removeIngredientHandler = (id) => {
+  const removeIngredientHandler = async (id) => {
+    await fetch(
+      `https://react-http-ef0dc-default-rtdb.firebaseio.com/ingredients/${id}.json`,
+      {
+        method: "DELETE",
+      }
+    );
     setUserIngredients((prevIngredients) => {
       return prevIngredients.filter((ingredient) => ingredient.id !== id);
     });
