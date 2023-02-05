@@ -7,9 +7,8 @@ const Search = memo(({ onLoadIngredients }) => {
   const [enteredFilter, setEnteredFilter] = useState("");
   const inputRef = useRef();
 
-  // We are still creating a lot of timers on every key stroke, we will fix this soon
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (enteredFilter === inputRef.current.value) {
         const query =
           enteredFilter.length === 0
@@ -34,6 +33,13 @@ const Search = memo(({ onLoadIngredients }) => {
         fetchData();
       }
     }, 500);
+
+    // The cleanup function will run the NEXT time this useEffect runs and BEFORE the actual function code
+    return () => {
+      // This will make sure that we clear the previous timer if this useEffect runs again
+      // and the previous timer is still running
+      clearTimeout(timer);
+    };
   }, [enteredFilter, onLoadIngredients, inputRef]);
 
   return (
