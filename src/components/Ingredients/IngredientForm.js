@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { memo, useState } from "react";
 
 import Card from "../UI/Card";
 import "./IngredientForm.css";
 
-const IngredientForm = React.memo((props) => {
+const IngredientForm = memo((props) => {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
 
