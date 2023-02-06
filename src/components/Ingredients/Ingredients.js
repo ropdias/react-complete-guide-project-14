@@ -44,67 +44,64 @@ const Ingredients = () => {
     loading: false,
     error: null,
   });
-  // const [userIngredients, setUserIngredients] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState();
 
   useEffect(() => {
     console.log("RENDERING INGREDIENTS", userIngredients);
   }, [userIngredients]);
 
-  const filteredIngredientsHandler = useCallback((filteredIngredients) => {
-    // setUserIngredients(filteredIngredients);
-    dispatchUserIngredients({ type: "SET", ingredients: filteredIngredients });
+  const filteredIngredientsSuccessHandler = useCallback(
+    (filteredIngredients) => {
+      dispatchUserIngredients({
+        type: "SET",
+        ingredients: filteredIngredients,
+      });
+    },
+    []
+  );
+
+  const filteredIngredientsErrorHandler = useCallback((errorMessage) => {
+    dispatchHttp({ type: "ERROR", errorMessage: errorMessage });
   }, []);
 
   const addIngredientHandler = async (ingredient) => {
-    // setIsLoading(true);
-    dispatchHttp({ type: "SEND" });
-    const response = await fetch(
-      "https://react-http-ef0dc-default-rtdb.firebaseio.com/ingredients.json",
-      {
-        method: "POST",
-        body: JSON.stringify(ingredient),
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    // setIsLoading(false);
-    dispatchHttp({ type: "RESPONSE" });
-    const responseData = await response.json();
-    // setUserIngredients((prevIngredients) => {
-    //   return [...prevIngredients, { id: responseData.name, ...ingredient }];
-    // });
-    dispatchUserIngredients({
-      type: "ADD",
-      ingredient: { id: responseData.name, ...ingredient },
-    });
+    try {
+      dispatchHttp({ type: "SEND" });
+      const response = await fetch(
+        "https://react-http-ef0dc-default-rtdb.firebaseio.com/ingredients.json",
+        {
+          method: "POST",
+          body: JSON.stringify(ingredient),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      dispatchHttp({ type: "RESPONSE" });
+      const responseData = await response.json();
+      dispatchUserIngredients({
+        type: "ADD",
+        ingredient: { id: responseData.name, ...ingredient },
+      });
+    } catch (error) {
+      dispatchHttp({ type: "ERROR", errorMessage: "Something went wrong!" });
+    }
   };
 
   const removeIngredientHandler = async (id) => {
-    // setIsLoading(true);
-    dispatchHttp({ type: "SEND" });
     try {
+      dispatchHttp({ type: "SEND" });
       await fetch(
         `https://react-http-ef0dc-default-rtdb.firebaseio.com/ingredients/${id}.json`,
         {
           method: "DELETE",
         }
       );
-      // setIsLoading(false);
       dispatchHttp({ type: "RESPONSE" });
-      // setUserIngredients((prevIngredients) => {
-      //   return prevIngredients.filter((ingredient) => ingredient.id !== id);
-      // });
       dispatchUserIngredients({ type: "DELETE", id: id });
     } catch (error) {
       dispatchHttp({ type: "ERROR", errorMessage: "Something went wrong!" });
-      // setError("Something went wrong!");
-      // setIsLoading(false);
     }
   };
 
   const clearError = () => {
-    // setError(null);
     dispatchHttp({ type: "CLEAR_ERROR" });
   };
 
@@ -119,7 +116,10 @@ const Ingredients = () => {
       />
 
       <section>
-        <Search onLoadIngredients={filteredIngredientsHandler} />
+        <Search
+          onSuccessLoadingIngredients={filteredIngredientsSuccessHandler}
+          onErrorLoadingIngredients={filteredIngredientsErrorHandler}
+        />
         <IngredientList
           ingredients={userIngredients}
           onRemoveItem={removeIngredientHandler}
