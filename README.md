@@ -11,20 +11,20 @@ Section 28 (Optional - React Hooks Introduction & Summary) covered:
 - [x] Multiple States
 - [x] Rules of Hooks
 - [x] Passing State Data Across Components
-- [ ] Sending Http Requests
-- [ ] useEffect() & Loading Data
-- [ ] Understanding useEffect() Dependencies
-- [ ] More on useEffect()
-- [ ] What's useCallback()?
-- [ ] Working with Refs & useRef()
-- [ ] Cleaning Up with useEffect()
-- [ ] Deleting Ingredients
-- [ ] Loading Errors & State Batching
-- [ ] More on State Batching & State Updates
-- [ ] Understanding useReducer()
-- [ ] Using useReducer() for the Http State
-- [ ] Working with useContext()
-- [ ] Performance Optimizations with useMemo()
+- [x] Sending Http Requests
+- [x] useEffect() & Loading Data
+- [x] Understanding useEffect() Dependencies
+- [x] More on useEffect()
+- [x] What's useCallback()?
+- [x] Working with Refs & useRef()
+- [x] Cleaning Up with useEffect()
+- [x] Deleting Ingredients
+- [x] Loading Errors & State Batching
+- [x] More on State Batching & State Updates
+- [x] Understanding useReducer()
+- [x] Using useReducer() for the Http State
+- [x] Working with useContext()
+- [x] Performance Optimizations with useMemo()
 - [ ] Getting Started with Custom Hooks
 - [ ] Sharing Data Between Custom Hooks & Components
 - [ ] Using the Custom Hook
