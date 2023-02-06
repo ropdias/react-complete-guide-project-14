@@ -1,4 +1,4 @@
-import { useReducer, useState, useEffect, useCallback } from "react";
+import { useReducer, useEffect, useCallback } from "react";
 
 import IngredientForm from "./IngredientForm";
 import IngredientList from "./IngredientList";
@@ -16,15 +16,37 @@ const ingredientsReducer = (currentIngredients, action) => {
         (ingredient) => ingredient.id !== action.id
       );
     default:
-      throw new Error("Should not get there!");
+      throw new Error("Should not be reached!");
+  }
+};
+
+const httpReducer = (currentHttpState, action) => {
+  switch (action.type) {
+    case "SEND":
+      return { loading: true, error: null };
+    case "RESPONSE":
+      return { ...currentHttpState, loading: false };
+    case "ERROR":
+      return { loading: false, error: action.errorMessage };
+    case "CLEAR_ERROR":
+      return { ...currentHttpState, error: null };
+    default:
+      throw new Error("Should not be reached!");
   }
 };
 
 const Ingredients = () => {
-  const [userIngredients, dispatch] = useReducer(ingredientsReducer, []);
+  const [userIngredients, dispatchUserIngredients] = useReducer(
+    ingredientsReducer,
+    []
+  );
+  const [httpState, dispatchHttp] = useReducer(httpReducer, {
+    loading: false,
+    error: null,
+  });
   // const [userIngredients, setUserIngredients] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState();
 
   useEffect(() => {
     console.log("RENDERING INGREDIENTS", userIngredients);
@@ -32,11 +54,12 @@ const Ingredients = () => {
 
   const filteredIngredientsHandler = useCallback((filteredIngredients) => {
     // setUserIngredients(filteredIngredients);
-    dispatch({ type: "SET", ingredients: filteredIngredients });
+    dispatchUserIngredients({ type: "SET", ingredients: filteredIngredients });
   }, []);
 
   const addIngredientHandler = async (ingredient) => {
-    setIsLoading(true);
+    // setIsLoading(true);
+    dispatchHttp({ type: "SEND" });
     const response = await fetch(
       "https://react-http-ef0dc-default-rtdb.firebaseio.com/ingredients.json",
       {
@@ -45,19 +68,21 @@ const Ingredients = () => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    setIsLoading(false);
+    // setIsLoading(false);
+    dispatchHttp({ type: "RESPONSE" });
     const responseData = await response.json();
     // setUserIngredients((prevIngredients) => {
     //   return [...prevIngredients, { id: responseData.name, ...ingredient }];
     // });
-    dispatch({
+    dispatchUserIngredients({
       type: "ADD",
       ingredient: { id: responseData.name, ...ingredient },
     });
   };
 
   const removeIngredientHandler = async (id) => {
-    setIsLoading(true);
+    // setIsLoading(true);
+    dispatchHttp({ type: "SEND" });
     try {
       await fetch(
         `https://react-http-ef0dc-default-rtdb.firebaseio.com/ingredients/${id}.json`,
@@ -65,27 +90,32 @@ const Ingredients = () => {
           method: "DELETE",
         }
       );
-      setIsLoading(false);
+      // setIsLoading(false);
+      dispatchHttp({ type: "RESPONSE" });
       // setUserIngredients((prevIngredients) => {
       //   return prevIngredients.filter((ingredient) => ingredient.id !== id);
       // });
-      dispatch({ type: "DELETE", id: id });
+      dispatchUserIngredients({ type: "DELETE", id: id });
     } catch (error) {
-      setError("Something went wrong!");
-      setIsLoading(false);
+      dispatchHttp({ type: "ERROR", errorMessage: "Something went wrong!" });
+      // setError("Something went wrong!");
+      // setIsLoading(false);
     }
   };
 
   const clearError = () => {
-    setError(null);
+    // setError(null);
+    dispatchHttp({ type: "CLEAR_ERROR" });
   };
 
   return (
     <div className="App">
-      {error && <ErrorModal onClose={clearError}>{error}</ErrorModal>}
+      {httpState.error && (
+        <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>
+      )}
       <IngredientForm
         onAddIngredient={addIngredientHandler}
-        loading={isLoading}
+        loading={httpState.loading}
       />
 
       <section>
