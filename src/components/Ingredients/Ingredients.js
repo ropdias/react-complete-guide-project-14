@@ -1,12 +1,28 @@
-import { useState, useEffect, useCallback } from "react";
+import { useReducer, useState, useEffect, useCallback } from "react";
 
 import IngredientForm from "./IngredientForm";
 import IngredientList from "./IngredientList";
 import ErrorModal from "../UI/ErrorModal";
 import Search from "./Search";
 
+const ingredientsReducer = (currentIngredients, action) => {
+  switch (action.type) {
+    case "SET":
+      return action.ingredients;
+    case "ADD":
+      return [...currentIngredients, action.ingredient];
+    case "DELETE":
+      return currentIngredients.filter(
+        (ingredient) => ingredient.id !== action.id
+      );
+    default:
+      throw new Error("Should not get there!");
+  }
+};
+
 const Ingredients = () => {
-  const [userIngredients, setUserIngredients] = useState([]);
+  const [userIngredients, dispatch] = useReducer(ingredientsReducer, []);
+  // const [userIngredients, setUserIngredients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
@@ -14,12 +30,10 @@ const Ingredients = () => {
     console.log("RENDERING INGREDIENTS", userIngredients);
   }, [userIngredients]);
 
-  const filteredIngredientsHandler = useCallback(
-    (filteredIngredients) => {
-      setUserIngredients(filteredIngredients);
-    },
-    [setUserIngredients]
-  );
+  const filteredIngredientsHandler = useCallback((filteredIngredients) => {
+    // setUserIngredients(filteredIngredients);
+    dispatch({ type: "SET", ingredients: filteredIngredients });
+  }, []);
 
   const addIngredientHandler = async (ingredient) => {
     setIsLoading(true);
@@ -33,8 +47,12 @@ const Ingredients = () => {
     );
     setIsLoading(false);
     const responseData = await response.json();
-    setUserIngredients((prevIngredients) => {
-      return [...prevIngredients, { id: responseData.name, ...ingredient }];
+    // setUserIngredients((prevIngredients) => {
+    //   return [...prevIngredients, { id: responseData.name, ...ingredient }];
+    // });
+    dispatch({
+      type: "ADD",
+      ingredient: { id: responseData.name, ...ingredient },
     });
   };
 
@@ -48,9 +66,10 @@ const Ingredients = () => {
         }
       );
       setIsLoading(false);
-      setUserIngredients((prevIngredients) => {
-        return prevIngredients.filter((ingredient) => ingredient.id !== id);
-      });
+      // setUserIngredients((prevIngredients) => {
+      //   return prevIngredients.filter((ingredient) => ingredient.id !== id);
+      // });
+      dispatch({ type: "DELETE", id: id });
     } catch (error) {
       setError("Something went wrong!");
       setIsLoading(false);
