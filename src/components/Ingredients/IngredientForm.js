@@ -1,12 +1,13 @@
 import { memo, useState } from "react";
 
 import Card from "../UI/Card";
-import LoadingIndicator from '../UI/LoadingIndicator'
+import LoadingIndicator from "../UI/LoadingIndicator";
 import "./IngredientForm.css";
 
 const IngredientForm = memo((props) => {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
+  console.log("RENDERING INGREDIENT FORM");
 
   const titleOnChangehandler = (event) => {
     setEnteredTitle(event.target.value);
