@@ -25,9 +25,9 @@ Section 28 (Optional - React Hooks Introduction & Summary) covered:
 - [x] Using useReducer() for the Http State
 - [x] Working with useContext()
 - [x] Performance Optimizations with useMemo()
-- [ ] Getting Started with Custom Hooks
-- [ ] Sharing Data Between Custom Hooks & Components
-- [ ] Using the Custom Hook
+- [x] Getting Started with Custom Hooks
+- [x] Sharing Data Between Custom Hooks & Components
+- [x] Using the Custom Hook
 
 
 More info: https://www.udemy.com/course/react-the-complete-guide-incl-redux/

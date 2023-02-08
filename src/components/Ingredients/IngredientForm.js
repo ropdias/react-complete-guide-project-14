@@ -7,7 +7,6 @@ import "./IngredientForm.css";
 const IngredientForm = memo((props) => {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
-  console.log("RENDERING INGREDIENT FORM");
 
   const titleOnChangehandler = (event) => {
     setEnteredTitle(event.target.value);
