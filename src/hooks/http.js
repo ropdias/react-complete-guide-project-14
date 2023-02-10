@@ -61,6 +61,13 @@ const useHttp = () => {
           },
         });
         const responseData = await response.json();
+        if (!response.ok) {
+          if (responseData.error) {
+            throw new Error(responseData.error);
+          } else {
+            throw new Error("http response was not successful (status is not in the range 200-299)");
+          }
+        }
         dispatchHttp({
           type: "RESPONSE",
           responseData: responseData,
@@ -68,7 +75,7 @@ const useHttp = () => {
           reqIdentifier: reqIdentifier,
         });
       } catch (error) {
-        dispatchHttp({ type: "ERROR", errorMessage: "Something went wrong!" });
+        dispatchHttp({ type: "ERROR", errorMessage: error.message });
       }
     },
     []
